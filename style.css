@@ -44,6 +44,12 @@ input[type="checkbox"] {
   border: 4px solid #384e76;
 }
 
+.list-check {
+  width: 25px;
+  height: 25px;
+  border: 4px solid #384e76;
+}
+
 input[type="checkbox"]:checked {
   appearance: checkbox;
   -webkit-appearance: checkbox;
@@ -133,4 +139,140 @@ body * {
 }
 
 .item3 {
+}
+
+.barrer {
+  text-decoration: line-through;
+}
+
+.modal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.modal * {
+  /* border: 1px solid black; */
+}
+.modal .modal-content {
+  width: 350px;
+  height: 230px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modal .modal-content .modal-header {
+  height: 15%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px;
+  font-size: 1.1rem;
+  background-color: rgb(234, 234, 234);
+}
+.modal .modal-content .modal-header span:nth-child(1) {
+  width: 60%;
+}
+.modal .modal-content .modal-header span:nth-child(2) {
+  color: red;
+  padding: 5px 5px;
+  cursor: pointer;
+}
+.modal .modal-content .modal-body {
+  height: 60%;
+  width: 100%;
+  font-size: 2rem;
+  row-gap: 10px;
+  padding: 2% 0;
+}
+
+.modal .modal-content .modal-footer {
+  height: 25%;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  column-gap: 5px;
+  padding: 2px;
+  background-color: rgb(234, 234, 234);
+}
+
+.modal .modal-content .modal-footer button {
+  width: 30%;
+  height: 70%;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-ok {
+  background-color: #081020;
+}
+
+.btn-cancel {
+  background-color: red;
+}
+
+.error-message {
+  color: darkred;
+  font-size: 0.8rem;
+}
+
+.modal .modal-content .modal-body label {
+  width: 100%;
+  font-size: 1rem;
+  justify-content: center;
+  column-gap: 10px;
+}
+
+.modal .modal-content .modal-body label input {
+  font-size: 1rem;
+  height: 30px;
+}
+
+#taskId {
+  width: 50%;
+}
+
+#dateId {
+  width: 50%;
+}
+
+.hidde {
+  display: none;
+}
+
+.check-back {
+  background: linear-gradient(to right, hsl(231, 67%, 14%), hsl(231, 67%, 14%));
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check-icon {
+  background-image: url("./icon-check.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 70%;
+  height: 70%;
+  position: absolute;
+}
+
+.disabled-btn {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }

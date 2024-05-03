@@ -16,15 +16,17 @@
   <body>
     <div class="container flex-column">
       <div class="todo-head flex-row">
-        <input type="checkbox" name="" id="" />
-        <span>À Faire Pour le 24/07/2024</span>
+        <input type="checkbox" name="" id="checkAll" />
+        <span>À Faire Pour le</span><span class="dateActu"> 24/07/2024</span>
       </div>
       <div class="todo-list flex-column">
-        <div class="todo-item flex-row">
-          <input type="checkbox" name="" id="" />
-          <span>À Faire Pour le 24/07/2024</span>
+        <!-- <div class="todo-item flex-row">
+          <label for="id1">
+            <input type="checkbox" name="" id="id1" />
+            <span>Tache correcte</span>
+          </label>
           <span class="hours">17H30</span>
-        </div>
+        </div> -->
       </div>
       <div class="todo-foot flex-row-aj">
         <div class="item1"><i class="fa fa-trash"></i> Supprimer</div>
@@ -36,9 +38,37 @@
           <i class="fa fa-calendar"></i>
           Choisir date
         </div>
-        <input type="date" name="" id="" />
+        <input type="date" name="" id="filterDate" />
       </div>
     </div>
+
+    <!-- <form action="" method="" id="formAddTask"> -->
+    <div class="modal hidde">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span>Ajouter une tâche</span>
+          <span class="close-modal">X</span>
+        </div>
+        <div class="modal-body flex-column">
+          <label for="taskId" class="flex-row">
+            Tâche
+            <input type="text" name="task" id="taskId" />
+          </label>
+          <i class="error-message">champs obligatoire</i>
+          <label for="dateId" class="flex-row">
+            Date
+            <input type="time" name="date" id="dateId" />
+          </label>
+          <i class="error-message">champ obligatoire</i>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-ok add-modal">Enregistrer</button>
+          <button class="btn-cancel close-modal">Annuler</button>
+        </div>
+      </div>
+    </div>
+    <!-- </form> -->
+
     <script src="script.js"></script>
   </body>
 </html>
