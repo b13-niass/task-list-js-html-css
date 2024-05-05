@@ -17,12 +17,12 @@ const tasks = [
   {
     libelle: "Tache numéro 4",
     completed: 0,
-    date: "2021-02-01T16:45:30",
+    date: "2024-05-02T16:45:30",
   },
   {
     libelle: "Tache numéro 5",
     completed: 0,
-    date: "2024-02-01T19:45:30",
+    date: "2024-05-02T19:45:30",
   },
 ];
 
@@ -45,8 +45,8 @@ function loadData(tasks) {
     let date = new Date(task.date);
     let templateTodoList = `
       <div class="todo-item flex-row">
-        <span class="list-check ${task.completed ? "check-back" : ""}">
-          <i class="${task.completed ? "check-icon" : ""}"></i>
+        <span class="list-check">
+          <i class=""></i>
         </span>
         <span class="${task.completed ? "barrer" : ""}">${task.libelle}</span>
         <span class="hours">${date.getHours() + "H" + date.getMinutes()}</span>
@@ -57,11 +57,10 @@ function loadData(tasks) {
 }
 
 function addNewData(task) {
-  // let date = createDateWithHour(task.date);
   let templateTodoList = `
       <div class="todo-item flex-row">
-        <span class="list-check ${task.completed ? "check-back" : ""}">
-          <i class="${task.completed ? "check-icon" : ""}"></i>
+        <span class="list-check ">
+          <i class=""></i>
         </span>
         <span class="${task.completed ? "barrer" : ""}">${task.libelle}</span>
         <span class="hours">${
@@ -71,47 +70,57 @@ function addNewData(task) {
         `;
 
   milieuMidListe.insertAdjacentHTML("afterbegin", templateTodoList);
-  let listCheck = milieuMidListe.firstElementChild;
-  console.log(listCheck);
+  let listCheck =
+    milieuMidListe.firstElementChild.firstElementChild.nextElementSibling;
+  let boxCheck = milieuMidListe.firstElementChild.firstElementChild;
+  // console.log(listCheck);
   listCheck.addEventListener("click", function (e) {
-    listCheck.firstElementChild.classList.toggle("check-back");
-    let i_check = listCheck.firstElementChild.firstElementChild;
-    let libelle_check = listCheck.firstElementChild.nextElementSibling;
-    i_check.classList.toggle("check-icon");
-    libelle_check.classList.toggle("barrer");
+    listCheck.classList.toggle("barrer");
 
     tasks.map((task) => {
-      if (task.libelle == libelle_check.textContent) {
+      if (task.libelle == listCheck.textContent) {
         task.completed = task.completed ? 0 : 1;
         return task;
       }
     });
+  });
+  listCheck.addEventListener("dblclick", function (e) {
+    listCheck.toggleAttribute("contenteditable");
+  });
+  boxCheck.addEventListener("click", function (e) {
+    boxCheck.classList.toggle("check-back");
+    let i_check = boxCheck.firstElementChild;
+    checkAll.checked = false;
+    i_check.classList.toggle("check-icon");
   });
 }
 
 loadData(tasks);
 
 function listCheckCall() {
-  let listChecks = document.querySelectorAll(".todo-item");
+  let todoItems = document.querySelectorAll(".todo-item");
 
-  listChecks.forEach((listCheck) => {
-    listCheck.addEventListener("click", function (e) {
-      listCheck.firstElementChild.classList.toggle("check-back");
-      let i_check = listCheck.firstElementChild.firstElementChild;
-      let libelle_check = listCheck.firstElementChild.nextElementSibling;
-      i_check.classList.toggle("check-icon");
+  todoItems.forEach((todoItem) => {
+    let libelle_check = todoItem.firstElementChild.nextElementSibling;
+    let boxCheck = todoItem.firstElementChild;
+    libelle_check.addEventListener("click", function (e) {
       libelle_check.classList.toggle("barrer");
-
       tasks.map((task) => {
         if (task.libelle == libelle_check.textContent) {
           task.completed = task.completed ? 0 : 1;
           return task;
         }
       });
-      // console.log(tasks);
     });
-    listCheck.addEventListener("dblclick", function () {
-      console.log("ok");
+    libelle_check.addEventListener("dblclick", function (e) {
+      libelle_check.toggleAttribute("contenteditable");
+    });
+    boxCheck.addEventListener("click", function (e) {
+      boxCheck.classList.toggle("check-back");
+      let i_check = boxCheck.firstElementChild;
+      checkAll.checked = false;
+      console.log(checkAll);
+      i_check.classList.toggle("check-icon");
     });
   });
 }
@@ -134,14 +143,26 @@ addModal.addEventListener("click", function (e) {
   let task = document.querySelector("#taskId");
   let date = document.querySelector("#dateId");
   if (task.value != "" && date.value != "") {
-    let dateValue = createDateWithHour(date.value);
-    console.log(date.value);
+    // console.log(filterDate.value);
+    let dateValue;
+    if (filterDate.value == "") {
+      dateValue = createDateWithHour(date.value);
+    } else {
+      dateValue = formatDate6(filterDate.value, date.value.split(":"));
+    }
     let newTask = {
       libelle: task.value,
       completed: 0,
-      date: dateValue,
+      date: new Date(dateValue),
     };
+    // let newDate = new Date(dateString);
+    console.log(newTask.date);
     addNewData(newTask);
+    task.value = "";
+    date.value = "";
+    newTask.date = dateValue;
+    console.log(newTask.date);
+    tasks.push(newTask);
   } else {
     console.log("vide");
   }
@@ -173,21 +194,12 @@ function createDateWithHour(hour) {
 
 checkAll.addEventListener("change", function (e) {
   let listChecks = document.querySelectorAll(".todo-item");
-  if (e.target.toggleAttribute("checked")) {
+  if (e.target.checked == true) {
     listChecks.forEach((listCheck) => {
       if (!listCheck.firstElementChild.classList.contains("check-back")) {
         listCheck.firstElementChild.classList.add("check-back");
         let i_check = listCheck.firstElementChild.firstElementChild;
-        let libelle_check = listCheck.firstElementChild.nextElementSibling;
         i_check.classList.add("check-icon");
-        libelle_check.classList.add("barrer");
-
-        tasks.map((task) => {
-          if (task.libelle == libelle_check.textContent) {
-            task.completed = 1;
-            return task;
-          }
-        });
       }
     });
   } else {
@@ -195,16 +207,7 @@ checkAll.addEventListener("change", function (e) {
       if (listCheck.firstElementChild.classList.contains("check-back")) {
         listCheck.firstElementChild.classList.remove("check-back");
         let i_check = listCheck.firstElementChild.firstElementChild;
-        let libelle_check = listCheck.firstElementChild.nextElementSibling;
         i_check.classList.remove("check-icon");
-        libelle_check.classList.remove("barrer");
-
-        tasks.map((task) => {
-          if (task.libelle == libelle_check.textContent) {
-            task.completed = task.completed ? 0 : 1;
-            return task;
-          }
-        });
       }
     });
   }
@@ -217,9 +220,9 @@ btnDelete.addEventListener("click", function () {
     if (listCheck.firstElementChild.classList.contains("check-back")) {
       listCheck.remove();
     }
-    tasks.filter((task) => {
+    tasks.forEach((task, index) => {
       if (task.libelle != libelle_check.textContent) {
-        return true;
+        tasks.splice(index, 1);
       }
     });
   });
@@ -312,6 +315,35 @@ function formatDate5(originalDate) {
   let day = ("0" + dateObj.getDate()).slice(-2);
 
   let formattedDate = year + "-" + month + "-" + day;
+
+  return formattedDate;
+}
+
+// YYYY-MM-DD format to 2022-02-01T16:45:30
+function formatDate6(originalDate, heureChoisit) {
+  let parts = originalDate.split("-");
+  let year = parts[0];
+  let month = parts[1];
+  let day = parts[2];
+
+  let dateObj = new Date(year, month - 1, day);
+
+  let hours = heureChoisit[0];
+  let minutes = heureChoisit[1];
+  let seconds = "00";
+
+  let formattedDate =
+    dateObj.getFullYear() +
+    "-" +
+    ("0" + (dateObj.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + dateObj.getDate()).slice(-2) +
+    "T" +
+    hours +
+    ":" +
+    minutes +
+    ":" +
+    seconds;
 
   return formattedDate;
 }

@@ -100,7 +100,19 @@ body * {
   padding: 1% 0;
   column-gap: 15px;
   border-bottom: 2px solid #02060e;
-  margin-bottom: 5%;
+  margin-bottom: 2.5%;
+}
+
+.todo-filter {
+  justify-content: space-evenly;
+  margin-bottom: 2.5%;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.todo-filter > span:hover {
+  cursor: pointer;
+  color: hsl(220, 98%, 61%);
 }
 
 .todo-list {
@@ -143,6 +155,7 @@ body * {
 
 .barrer {
   text-decoration: line-through;
+  opacity: 0.4;
 }
 
 .modal {
