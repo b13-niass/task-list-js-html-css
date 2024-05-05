@@ -135,6 +135,15 @@ body * {
   font-size: 1.1rem;
 }
 
+.todo-foot > *:not(input):hover {
+  cursor: pointer;
+  color: hsl(220, 80%, 48%);
+}
+
+.todo-foot input {
+  max-width: 168px;
+}
+
 .hours {
   background-color: #081020;
   padding: 0.5% 1%;
@@ -288,4 +297,8 @@ body * {
   opacity: 0.5;
   pointer-events: none;
   cursor: not-allowed;
+}
+
+.filter-color {
+  color: hsl(220, 98%, 61%);
 }

@@ -1,26 +1,26 @@
 const tasks = [
   {
-    libelle: "Tache numéro 1",
+    libelle: "ZTache numéro 1",
     completed: 1,
     date: "2024-05-02T16:45:30",
   },
   {
-    libelle: "Tache numéro 2",
+    libelle: "BTache numéro 2",
     completed: 0,
     date: "2024-05-02T22:45:30",
   },
   {
-    libelle: "Tache numéro 3",
+    libelle: "CTache numéro 3",
     completed: 0,
     date: "2024-05-02T06:45:30",
   },
   {
-    libelle: "Tache numéro 4",
+    libelle: "ATache numéro 4",
     completed: 0,
     date: "2024-05-02T16:45:30",
   },
   {
-    libelle: "Tache numéro 5",
+    libelle: "HTache numéro 5",
     completed: 0,
     date: "2024-05-02T19:45:30",
   },
@@ -36,12 +36,16 @@ let modalElement = document.querySelector(".modal");
 let addModal = document.querySelector(".add-modal");
 let dateActu = document.querySelector(".dateActu");
 let checkAll = document.querySelector("#checkAll");
+let allTask = document.querySelector("#allTask");
+let tasksFiltered = tasks;
+let parNom = document.querySelector("#parNom");
+let parStatus = document.querySelector("#parStatus");
+let parHeure = document.querySelector("#parHeure");
 
-dateActu.innerText = "All Date"; //formatDate1(new Date());
-// filterDate.value = formatDate4(formatDate1(new Date()));
+dateActu.innerText = "All Date";
 
-function loadData(tasks) {
-  tasks.forEach((task) => {
+function loadData(tasksFiltered) {
+  tasksFiltered.forEach((task) => {
     let date = new Date(task.date);
     let templateTodoList = `
       <div class="todo-item flex-row">
@@ -73,11 +77,10 @@ function addNewData(task) {
   let listCheck =
     milieuMidListe.firstElementChild.firstElementChild.nextElementSibling;
   let boxCheck = milieuMidListe.firstElementChild.firstElementChild;
-  // console.log(listCheck);
   listCheck.addEventListener("click", function (e) {
     listCheck.classList.toggle("barrer");
 
-    tasks.map((task) => {
+    tasksFiltered.map((task) => {
       if (task.libelle == listCheck.textContent) {
         task.completed = task.completed ? 0 : 1;
         return task;
@@ -95,7 +98,7 @@ function addNewData(task) {
   });
 }
 
-loadData(tasks);
+loadData(tasksFiltered);
 
 function listCheckCall() {
   let todoItems = document.querySelectorAll(".todo-item");
@@ -105,7 +108,7 @@ function listCheckCall() {
     let boxCheck = todoItem.firstElementChild;
     libelle_check.addEventListener("click", function (e) {
       libelle_check.classList.toggle("barrer");
-      tasks.map((task) => {
+      tasksFiltered.map((task) => {
         if (task.libelle == libelle_check.textContent) {
           task.completed = task.completed ? 0 : 1;
           return task;
@@ -119,7 +122,6 @@ function listCheckCall() {
       boxCheck.classList.toggle("check-back");
       let i_check = boxCheck.firstElementChild;
       checkAll.checked = false;
-      console.log(checkAll);
       i_check.classList.toggle("check-icon");
     });
   });
@@ -143,7 +145,6 @@ addModal.addEventListener("click", function (e) {
   let task = document.querySelector("#taskId");
   let date = document.querySelector("#dateId");
   if (task.value != "" && date.value != "") {
-    // console.log(filterDate.value);
     let dateValue;
     if (filterDate.value == "") {
       dateValue = createDateWithHour(date.value);
@@ -155,17 +156,79 @@ addModal.addEventListener("click", function (e) {
       completed: 0,
       date: new Date(dateValue),
     };
-    // let newDate = new Date(dateString);
-    console.log(newTask.date);
     addNewData(newTask);
     task.value = "";
     date.value = "";
     newTask.date = dateValue;
-    console.log(newTask.date);
+    // tasksFiltered.push(newTask);
     tasks.push(newTask);
   } else {
     console.log("vide");
   }
+});
+
+parNom.addEventListener("click", (e) => {
+  if (
+    !parNom.children[0].classList.contains("filter-color") &&
+    !parNom.children[1].classList.contains("filter-color")
+  ) {
+    parNom.children[0].classList.add("filter-color");
+    sortingTaskByLibelle("libelle", "asc");
+    // console.log(tasksFiltered);
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parNom.children[0].classList.contains("filter-color")) {
+    parNom.children[0].classList.toggle("filter-color");
+    parNom.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("libelle", "desc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parNom.children[1].classList.contains("filter-color")) {
+    parNom.children[0].classList.toggle("filter-color");
+    parNom.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("libelle", "asc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  }
+});
+
+parStatus.addEventListener("click", (e) => {});
+parHeure.addEventListener("click", (e) => {
+  if (
+    !parHeure.children[0].classList.contains("filter-color") &&
+    !parHeure.children[1].classList.contains("filter-color")
+  ) {
+    parHeure.children[0].classList.add("filter-color");
+    sortingTaskByLibelle("heure", "asc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parHeure.children[0].classList.contains("filter-color")) {
+    parHeure.children[0].classList.toggle("filter-color");
+    parHeure.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("heure", "desc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parHeure.children[1].classList.contains("filter-color")) {
+    parHeure.children[0].classList.toggle("filter-color");
+    parHeure.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("heure", "asc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  }
+});
+
+allTask.addEventListener("click", (e) => {
+  tasksFiltered = tasks;
+  filterDate.value = "";
+  removeListElement();
+  loadData(tasksFiltered);
+  listCheckCall();
 });
 
 function createDateWithHour(hour) {
@@ -220,9 +283,9 @@ btnDelete.addEventListener("click", function () {
     if (listCheck.firstElementChild.classList.contains("check-back")) {
       listCheck.remove();
     }
-    tasks.forEach((task, index) => {
+    tasksFiltered.forEach((task, index) => {
       if (task.libelle != libelle_check.textContent) {
-        tasks.splice(index, 1);
+        tasksFiltered.splice(index, 1);
       }
     });
   });
@@ -368,15 +431,31 @@ function removeListElement() {
   });
 }
 
+function sortingTaskByLibelle(param, order) {
+  if (param == "libelle") {
+    if (order == "asc") {
+      tasksFiltered.sort((a, b) => b.libelle.localeCompare(a.libelle));
+    }
+    if (order == "desc") {
+      tasksFiltered.sort((a, b) => a.libelle.localeCompare(b.libelle));
+    }
+  } else if (param == "heure") {
+    if (order == "asc") {
+      tasksFiltered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // console.log(tasksFiltered);
+    }
+    if (order == "desc") {
+      tasksFiltered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  }
+}
+
 function filtrerParDate(dateToFiltre) {
-  let tasks_filter = new Array();
-  tasks.filter(function (task) {
+  tasksFiltered = [];
+  tasks.forEach(function (task) {
     if (formatDate5(task.date) == dateToFiltre) {
-      tasks_filter.push(task);
-      return true;
-    } else {
-      return false;
+      tasksFiltered.push(task);
     }
   });
-  return tasks_filter;
+  return tasksFiltered;
 }
