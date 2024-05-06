@@ -41,8 +41,26 @@ let tasksFiltered = tasks;
 let parNom = document.querySelector("#parNom");
 let parStatus = document.querySelector("#parStatus");
 let parHeure = document.querySelector("#parHeure");
+let addForm = document.querySelector("#addForm");
 
 dateActu.innerText = "All Date";
+
+// const showError = (fils) => {
+//   const parent = fils.parentNode;
+//   // console.log(parent);
+//   parent.nextElementSibling.classList.toggle("error-message");
+// };
+
+// const checkRequireGlobal = (inputArray) => {
+//   inputArray.forEach((input) => {
+//     // const parent = input.parentNode;
+//     if (input.value.trim() === "") {
+//       showError(input, `${getInputName(input)} est requis`);
+//     } else {
+//       showSuccees(input);
+//     }
+//   });
+// };
 
 function loadData(tasksFiltered) {
   tasksFiltered.forEach((task) => {
@@ -144,7 +162,13 @@ btnCancel.addEventListener("click", function (e) {
 addModal.addEventListener("click", function (e) {
   let task = document.querySelector("#taskId");
   let date = document.querySelector("#dateId");
-  if (task.value != "" && date.value != "") {
+  const parentTask = task.parentNode;
+  const parentDate = date.parentNode;
+  if (task.value.trim() != "" && date.value.trim() != "") {
+    parentTask.nextElementSibling.classList.add("hidde-err-message");
+    parentTask.nextElementSibling.classList.remove("show-err-message");
+    parentDate.nextElementSibling.classList.add("hidde-err-message");
+    parentDate.nextElementSibling.classList.remove("show-err-message");
     let dateValue;
     if (filterDate.value == "") {
       dateValue = createDateWithHour(date.value);
@@ -160,10 +184,69 @@ addModal.addEventListener("click", function (e) {
     task.value = "";
     date.value = "";
     newTask.date = dateValue;
-    // tasksFiltered.push(newTask);
     tasks.push(newTask);
   } else {
-    console.log("vide");
+    if (task.value.trim() == "") {
+      parentTask.nextElementSibling.classList.remove("hidde-err-message");
+      parentTask.nextElementSibling.classList.add("show-err-message");
+    } else {
+      parentTask.nextElementSibling.classList.add("hidde-err-message");
+      parentTask.nextElementSibling.classList.remove("show-err-message");
+    }
+
+    if (date.value.trim() == "") {
+      parentDate.nextElementSibling.classList.remove("hidde-err-message");
+      parentDate.nextElementSibling.classList.add("show-err-message");
+    } else {
+      parentDate.nextElementSibling.classList.add("hidde-err-message");
+      parentDate.nextElementSibling.classList.remove("show-err-message");
+    }
+  }
+});
+
+addForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  let task = document.querySelector("#taskId");
+  let date = document.querySelector("#dateId");
+  const parentTask = task.parentNode;
+  const parentDate = date.parentNode;
+  if (task.value.trim() != "" && date.value.trim() != "") {
+    parentTask.nextElementSibling.classList.add("hidde-err-message");
+    parentTask.nextElementSibling.classList.remove("show-err-message");
+    parentDate.nextElementSibling.classList.add("hidde-err-message");
+    parentDate.nextElementSibling.classList.remove("show-err-message");
+    let dateValue;
+    if (filterDate.value == "") {
+      dateValue = createDateWithHour(date.value);
+    } else {
+      dateValue = formatDate6(filterDate.value, date.value.split(":"));
+    }
+    let newTask = {
+      libelle: task.value,
+      completed: 0,
+      date: new Date(dateValue),
+    };
+    addNewData(newTask);
+    task.value = "";
+    date.value = "";
+    newTask.date = dateValue;
+    tasks.push(newTask);
+  } else {
+    if (task.value.trim() == "") {
+      parentTask.nextElementSibling.classList.remove("hidde-err-message");
+      parentTask.nextElementSibling.classList.add("show-err-message");
+    } else {
+      parentTask.nextElementSibling.classList.add("hidde-err-message");
+      parentTask.nextElementSibling.classList.remove("show-err-message");
+    }
+
+    if (date.value.trim() == "") {
+      parentDate.nextElementSibling.classList.remove("hidde-err-message");
+      parentDate.nextElementSibling.classList.add("show-err-message");
+    } else {
+      parentDate.nextElementSibling.classList.add("hidde-err-message");
+      parentDate.nextElementSibling.classList.remove("show-err-message");
+    }
   }
 });
 
@@ -226,6 +309,7 @@ parHeure.addEventListener("click", (e) => {
 allTask.addEventListener("click", (e) => {
   tasksFiltered = tasks;
   filterDate.value = "";
+  dateActu.innerText = "All Date";
   removeListElement();
   loadData(tasksFiltered);
   listCheckCall();
@@ -282,12 +366,17 @@ btnDelete.addEventListener("click", function () {
     let libelle_check = listCheck.firstElementChild.nextElementSibling;
     if (listCheck.firstElementChild.classList.contains("check-back")) {
       listCheck.remove();
+      tasksFiltered.forEach((task, index) => {
+        if (task.libelle == libelle_check.textContent) {
+          tasksFiltered.splice(index, 1);
+        }
+      });
+      tasks.forEach((task, index) => {
+        if (task.libelle == libelle_check.textContent) {
+          tasks.splice(index, 1);
+        }
+      });
     }
-    tasksFiltered.forEach((task, index) => {
-      if (task.libelle != libelle_check.textContent) {
-        tasksFiltered.splice(index, 1);
-      }
-    });
   });
 });
 
@@ -422,6 +511,7 @@ filterDate.addEventListener("change", function (e) {
   removeListElement();
   loadData(filtrerParDate(filterDate.value));
   dateActu.innerText = formatDate3(filterDate.value);
+  listCheckCall();
 });
 
 function removeListElement() {

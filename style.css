@@ -240,10 +240,12 @@ body * {
 
 .btn-ok {
   background-color: #081020;
+  cursor: pointer;
 }
 
 .btn-cancel {
   background-color: red;
+  cursor: pointer;
 }
 
 .error-message {
@@ -301,4 +303,15 @@ body * {
 
 .filter-color {
   color: hsl(220, 98%, 61%);
+}
+
+/* .modal-body.error span{
+  visibility: visible;
+} */
+
+.hidde-err-message {
+  visibility: hidden;
+}
+.show-err-message {
+  visibility: visible;
 }
