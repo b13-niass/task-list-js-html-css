@@ -88,10 +88,30 @@ function addNewData(task) {
       }
     });
   });
+  let textAModifier = listCheck.textContent;
   listCheck.addEventListener("dblclick", function (e) {
     listCheck.toggleAttribute("contenteditable");
   });
-
+  listCheck.addEventListener("mouseout", () => {
+    // console.log(listCheck);
+    listCheck.removeAttribute("contenteditable");
+    tasksFiltered.forEach((task, index) => {
+      if (
+        textAModifier == task.libelle &&
+        listCheck.textContent != task.libelle
+      ) {
+        tasksFiltered[index].libelle = listCheck.textContent;
+      }
+    });
+    tasks.forEach((task, index) => {
+      if (
+        textAModifier == task.libelle &&
+        listCheck.textContent != task.libelle
+      ) {
+        tasks[index].libelle = listCheck.textContent;
+      }
+    });
+  });
   boxCheck.addEventListener("click", function (e) {
     boxCheck.classList.toggle("check-back");
     let i_check = boxCheck.firstElementChild;
@@ -129,8 +149,6 @@ function listCheckCall() {
           textAModifier == task.libelle &&
           libelle_check.textContent != task.libelle
         ) {
-          console.log(libelle_check.textContent);
-          // libelle_check.innerText = textAModifier;
           tasksFiltered[index].libelle = libelle_check.textContent;
         }
       });
@@ -139,12 +157,11 @@ function listCheckCall() {
           textAModifier == task.libelle &&
           libelle_check.textContent != task.libelle
         ) {
-          console.log(libelle_check.textContent);
-          // libelle_check.innerText = textAModifier;
           tasks[index].libelle = libelle_check.textContent;
         }
       });
     });
+
     boxCheck.addEventListener("click", function (e) {
       boxCheck.classList.toggle("check-back");
       let i_check = boxCheck.firstElementChild;
