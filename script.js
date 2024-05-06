@@ -45,23 +45,6 @@ let addForm = document.querySelector("#addForm");
 
 dateActu.innerText = "All Date";
 
-// const showError = (fils) => {
-//   const parent = fils.parentNode;
-//   // console.log(parent);
-//   parent.nextElementSibling.classList.toggle("error-message");
-// };
-
-// const checkRequireGlobal = (inputArray) => {
-//   inputArray.forEach((input) => {
-//     // const parent = input.parentNode;
-//     if (input.value.trim() === "") {
-//       showError(input, `${getInputName(input)} est requis`);
-//     } else {
-//       showSuccees(input);
-//     }
-//   });
-// };
-
 function loadData(tasksFiltered) {
   tasksFiltered.forEach((task) => {
     let date = new Date(task.date);
@@ -108,6 +91,7 @@ function addNewData(task) {
   listCheck.addEventListener("dblclick", function (e) {
     listCheck.toggleAttribute("contenteditable");
   });
+
   boxCheck.addEventListener("click", function (e) {
     boxCheck.classList.toggle("check-back");
     let i_check = boxCheck.firstElementChild;
@@ -120,9 +104,9 @@ loadData(tasksFiltered);
 
 function listCheckCall() {
   let todoItems = document.querySelectorAll(".todo-item");
-
   todoItems.forEach((todoItem) => {
     let libelle_check = todoItem.firstElementChild.nextElementSibling;
+    let textAModifier = libelle_check.textContent;
     let boxCheck = todoItem.firstElementChild;
     libelle_check.addEventListener("click", function (e) {
       libelle_check.classList.toggle("barrer");
@@ -135,6 +119,31 @@ function listCheckCall() {
     });
     libelle_check.addEventListener("dblclick", function (e) {
       libelle_check.toggleAttribute("contenteditable");
+    });
+
+    libelle_check.addEventListener("mouseout", () => {
+      console.log(libelle_check);
+      libelle_check.removeAttribute("contenteditable");
+      tasksFiltered.forEach((task, index) => {
+        if (
+          textAModifier == task.libelle &&
+          libelle_check.textContent != task.libelle
+        ) {
+          console.log(libelle_check.textContent);
+          // libelle_check.innerText = textAModifier;
+          tasksFiltered[index].libelle = libelle_check.textContent;
+        }
+      });
+      tasks.forEach((task, index) => {
+        if (
+          textAModifier == task.libelle &&
+          libelle_check.textContent != task.libelle
+        ) {
+          console.log(libelle_check.textContent);
+          // libelle_check.innerText = textAModifier;
+          tasks[index].libelle = libelle_check.textContent;
+        }
+      });
     });
     boxCheck.addEventListener("click", function (e) {
       boxCheck.classList.toggle("check-back");
@@ -278,7 +287,33 @@ parNom.addEventListener("click", (e) => {
   }
 });
 
-parStatus.addEventListener("click", (e) => {});
+parStatus.addEventListener("click", (e) => {
+  if (
+    !parHeure.children[0].classList.contains("filter-color") &&
+    !parHeure.children[1].classList.contains("filter-color")
+  ) {
+    parHeure.children[0].classList.add("filter-color");
+    sortingTaskByLibelle("selection", "asc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parHeure.children[0].classList.contains("filter-color")) {
+    parHeure.children[0].classList.toggle("filter-color");
+    parHeure.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("selection", "desc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  } else if (parHeure.children[1].classList.contains("filter-color")) {
+    parHeure.children[0].classList.toggle("filter-color");
+    parHeure.children[1].classList.toggle("filter-color");
+    sortingTaskByLibelle("selection", "asc");
+    removeListElement();
+    loadData(tasksFiltered);
+    listCheckCall();
+  }
+});
+
 parHeure.addEventListener("click", (e) => {
   if (
     !parHeure.children[0].classList.contains("filter-color") &&
@@ -536,6 +571,14 @@ function sortingTaskByLibelle(param, order) {
     }
     if (order == "desc") {
       tasksFiltered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+  } else if (param == "selection") {
+    if (order == "asc") {
+      tasksFiltered.sort((a, b) => a.completed - b.completed);
+      // console.log(tasksFiltered);
+    }
+    if (order == "desc") {
+      tasksFiltered.sort((a, b) => b.completed - a.completed);
     }
   }
 }
